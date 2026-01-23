@@ -10,8 +10,9 @@ name=$(echo "$name" | sed 's#/#-#g' | sed 's/[[:space:]]*$//')
 final=`yt-dlp --get-filename -o "%(uploader)s - ${name}.%(ext)s" "$i"`
 echo "$final"
 
-rm -rf a.ts*
-yt-dlp --concurrent-fragments $(nproc) -o "a.ts" "$i" --no-progress
+z_f=$(uuidgen).ts
+
+yt-dlp --concurrent-fragments $(nproc) -o $z_f "$i" --no-progress
 
 # ffmpeg -loglevel error -threads 4 -i 'a.ts' \
 # -c:v libx264 -crf 23 -preset veryfast \
@@ -19,9 +20,9 @@ yt-dlp --concurrent-fragments $(nproc) -o "a.ts" "$i" --no-progress
 # -c:a aac -b:a 128k -movflags +faststart \
 # "$final"
 
-ffmpeg -loglevel error -threads $(nproc) -i 'a.ts' \
+ffmpeg -loglevel error -threads $(nproc) -i $z_f \
 -c:v copy -c:a copy \
 -movflags +faststart \
-"$final"
+"$final" &
 
-rm -rf a.ts*
+rm -rf $z_f
