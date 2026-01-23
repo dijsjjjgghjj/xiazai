@@ -21,11 +21,14 @@ yt-dlp --concurrent-fragments $(nproc) -o $z_f "$i" --no-progress
 # "$final"
 
 start(){
+    start_time=$(date +%s)
     ffmpeg -loglevel error -threads $(nproc) -i $1 \
     -c:v copy -c:a copy \
     -movflags +faststart \
     "$final"
     
+    end_time=$(date +%s)
+    echo "Convert $((end_time - start_time))s --  $final"
     rm -rf $1
 }
 
