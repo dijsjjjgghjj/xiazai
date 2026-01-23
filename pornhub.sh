@@ -28,7 +28,7 @@ start(){
     "$final"
     
     end_time=$(date +%s)
-    echo "Convert $((end_time - start_time))s --  $final"
+    echo "Convert $((end_time - start_time))s -- $(du -h "$final" | cut -f1)"
     rm -rf $1
 }
 
